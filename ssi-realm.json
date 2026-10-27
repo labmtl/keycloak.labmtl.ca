@@ -1,0 +1,56 @@
+{
+  "id": "ssi-realm",
+  "realm": "ssi-realm",
+  "enabled": true,
+  "verifiableCredentialsEnabled": true,
+  "components": {
+    "org.keycloak.keys.KeyProvider": [
+      {
+        "name": "ssi-ecdsa-p256",
+        "providerId": "ecdsa-generated",
+        "subComponents": {},
+        "config": {
+          "priority": ["100"],
+          "ellipticCurve": ["P-256"]
+        }
+      }
+    ]
+  },
+  "clientScopes": [
+    {
+      "name": "VerifiableIdentity",
+      "protocol": "oid4vc",
+      "attributes": {
+        "vc.format": "dc+sd-jwt",
+        "vc.credential_configuration_id": "IdentityCredential",
+        "vc.proof_signing_alg_values_supported": "ES256"
+      },
+      "protocolMappers": [
+        {
+          "name": "first-name-mapper",
+          "protocol": "oid4vc",
+          "protocolMapper": "oid4vc-user-attribute-mapper",
+          "config": {
+            "user.attribute": "firstName",
+            "claim.name": "firstName"
+          }
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "ssi-wallet-client",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "attributes": {
+        "oid4vc.enabled": "true"
+      },
+      "optionalClientScopes": [
+        "VerifiableIdentity"
+      ]
+    }
+  ]
+}
